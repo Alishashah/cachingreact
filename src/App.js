@@ -27,6 +27,7 @@ function App() {
       <header className="App-header">
         dataimage2
         dataimage3
+        dataimage3
       </header>
     </div>
   );
