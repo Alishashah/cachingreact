@@ -30,6 +30,7 @@ function App() {
         dataimage4
         dataimage5
         dataimage6
+        dataimage7
       </header>
     </div>
   );
