@@ -41,10 +41,11 @@ function App() {
       {updateAvailable && (
         <div className="update-notification">
           <p>New update is available.</p>
-          <button onClick={handleUpdate}>Update Now</button>
+          <button onClick={handleUpdate()}>Update Now</button>
         </div>
       )}
       data
+      <h1>data</h1>
     </div>
   );
 }
