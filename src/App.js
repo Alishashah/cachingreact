@@ -1,12 +1,30 @@
 // src/App.js
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+  const [updateAvailable, setUpdateAvailable] = useState(false);
+
   useEffect(() => {
-    const checkForUpdates = async () => {
-      const registration = await navigator.serviceWorker.getRegistration();
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then((registration) => {
+        registration.addEventListener('updatefound', () => {
+          const installingWorker = registration.installing;
+          if (installingWorker) {
+            installingWorker.addEventListener('statechange', () => {
+              if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                setUpdateAvailable(true);
+              }
+            });
+          }
+        });
+      });
+    }
+  }, []);
+
+  const handleUpdate = () => {
+    navigator.serviceWorker.getRegistration().then((registration) => {
       if (registration && registration.waiting) {
         registration.waiting.postMessage({ type: 'SKIP_WAITING' });
         registration.waiting.addEventListener('statechange', (event) => {
@@ -15,24 +33,18 @@ function App() {
           }
         });
       }
-    };
-
-    window.addEventListener('load', checkForUpdates);
-
-    return () => window.removeEventListener('load', checkForUpdates);
-  }, []);
+    });
+  };
 
   return (
     <div className="App">
-      <header className="App-header">
-        dataimage2
-        dataimage3
-        dataimage4
-        dataimage5
-        dataimage6
-        dataimage7
-        dataimage8
-      </header>
+      {updateAvailable && (
+        <div className="update-notification">
+          <p>New update is available.</p>
+          <button onClick={handleUpdate}>Update Now</button>
+        </div>
+      )}
+      data
     </div>
   );
 }
